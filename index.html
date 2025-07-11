@@ -177,18 +177,19 @@
     async function fetchYesterdayArchive() {
       const archiveGrid = document.getElementById('archive-grid');
       archiveGrid.textContent = 'Loading archive...';
-
+    
       const yesterdayId = getYesterdayDateString();
-
+      console.log('Fetching yesterday archive doc:', yesterdayId);
+    
       try {
         const docRef = db.collection('archive').doc(yesterdayId);
         const docSnap = await docRef.get();
-
+    
         if (docSnap.exists) {
           const data = docSnap.data();
+          console.log('Yesterday archive data:', data);
           archiveGrid.innerHTML = ''; // Clear loading message
-
-          // data expected format: { group1: ["word1", ...], group2: [...], ... }
+    
           Object.values(data).forEach(wordList => {
             wordList.forEach(word => {
               const card = document.createElement('div');
@@ -198,6 +199,7 @@
             });
           });
         } else {
+          console.log('No archive found for yesterday.');
           archiveGrid.textContent = 'No archive found for yesterday.';
         }
       } catch (error) {
@@ -205,6 +207,7 @@
         archiveGrid.textContent = 'Failed to load archive.';
       }
     }
+
 
     // Fetch today's puzzle from Firestore; returns array of {text, group} or null
     async function fetchTodaysPuzzle() {
