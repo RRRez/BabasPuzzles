@@ -278,13 +278,8 @@
     }
 
     function toggleSelection(card, word) {
-      if (
-        card.classList.contains('correct-flowers') ||
-        card.classList.contains('correct-fruits') ||
-        card.classList.contains('correct-animals') ||
-        card.classList.contains('correct-colors')
-      ) return;
-
+      if (word.solved) return;  // ✅ Prevent selecting solved cards
+    
       if (card.classList.contains('selected')) {
         card.classList.remove('selected');
         selectedWords = selectedWords.filter(w => w.text !== word.text);
@@ -292,9 +287,10 @@
         card.classList.add('selected');
         selectedWords.push(word);
       }
-
+    
       submitBtn.disabled = selectedWords.length !== 4;
     }
+
 
     const shadeMap = ['#e0e0e0', '#c0c0c0', '#a0a0a0', '#000000'];
     const textColorMap = ['#000000', '#000000', '#ffffff', '#ffffff'];
@@ -328,6 +324,7 @@
         selectedWords.forEach(word => {
           word.solved = true;
         });
+        renderGrid();
     
         foundGroups.push(group);
         message.textContent = `"${group}"`;
