@@ -1,322 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Baba's Puzzle</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 20px;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        #game-container {
-            text-align: center;
-        }
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(4, 120px);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .card {
-            background-color: #fff;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .card.selected {
-            background-color: #d3e4ff;
-            border-color: #007bff;
-        }
-        .card.correct-flowers {
-            background-color: #e0e0e0; /* Lightest gray for easiest */
-            border-color: #28a745;
-        }
-        .card.correct-fruits {
-            background-color: #c0c0c0; /* Medium-light gray */
-            border-color: #28a745;
-        }
-        .card.correct-animals {
-            background-color: #a0a0a0; /* Medium-dark gray */
-            border-color: #28a745;
-        }
-        .card.correct-colors {
-            background-color: #000000; /* Black for hardest */
-            color: #ffffff; /* White text */
-            border-color: #28a745;
-        }
-        .card.incorrect {
-            background-color: #f8d7da;
-            border-color: #dc3545;
-        }
-        #submit-btn, #shuffle-btn {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #submit-btn {
-            background-color: #007bff;
-            color: white;
-        }
-        #submit-btn:hover {
-            background-color: #0056b3;
-        }
-        #shuffle-btn {
-            background-color: #6c757d;
-            color: white;
-        }
-        #shuffle-btn:hover {
-            background-color: #545b62;
-        }
-        #message {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #333;
-        }
-        #mistakes {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #dc3545;
-        }
-        #archive-container {
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 40px;
-        }
-        #archive-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .archive-card {
-            background-color: #eeeeee;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baba's Puzzle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    #game-container {
+      text-align: center;
+    }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(4, 120px);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .card.selected {
+      background-color: #d3e4ff;
+      border-color: #007bff;
+    }
+    .card.correct-flowers {
+      background-color: #e0e0e0; /* Lightest gray for easiest */
+      border-color: #28a745;
+    }
+    .card.correct-fruits {
+      background-color: #c0c0c0; /* Medium-light gray */
+      border-color: #28a745;
+    }
+    .card.correct-animals {
+      background-color: #a0a0a0; /* Medium-dark gray */
+      border-color: #28a745;
+    }
+    .card.correct-colors {
+      background-color: #000000; /* Black for hardest */
+      color: #ffffff; /* White text */
+      border-color: #28a745;
+    }
+    .card.incorrect {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+    }
+    #submit-btn, #shuffle-btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #submit-btn {
+      background-color: #007bff;
+      color: white;
+    }
+    #submit-btn:hover {
+      background-color: #0056b3;
+    }
+    #shuffle-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    #shuffle-btn:hover {
+      background-color: #545b62;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+    #mistakes {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #dc3545;
+    }
+    #archive-container {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+    #archive-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .archive-card {
+      background-color: #eeeeee;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
+  <!-- Firebase SDKs (compat version for simpler integration) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <h1>Baba's Puzzle</h1>
+  <h1>Baba's Puzzle</h1>
 
-    <!-- Archive container to show yesterday's puzzle -->
-    <div id="archive-container">
-        <h2>Yesterday's Puzzle Archive</h2>
-        <div id="archive-grid">Loading archive...</div>
-    </div>
+  <!-- Archive container to show yesterday's puzzle -->
+  <div id="archive-container">
+    <h2>Yesterday's Puzzle Archive</h2>
+    <div id="archive-grid">Loading archive...</div>
+  </div>
 
-    <div id="game-container">
-        <div id="grid"></div>
-        <button id="submit-btn">Submit</button>
-        <button id="shuffle-btn">Shuffle</button>
-        <div id="message"></div>
-        <div id="mistakes">Mistakes: 0/4</div>
-    </div>
+  <div id="game-container">
+    <div id="grid"></div>
+    <button id="submit-btn" disabled>Submit</button>
+    <button id="shuffle-btn">Shuffle</button>
+    <div id="message"></div>
+    <div id="mistakes">Mistakes: 0/4</div>
+  </div>
 
-    <script>
-        // Your Firebase config here — replace with your actual Firebase project credentials
-        const firebaseConfig = {
-          apiKey: "AIzaSyDg3PnFvuXML5zBXIZIwescKEpRPq0Ab6g",
-          authDomain: "avicenna-6c69b.firebaseapp.com",
-          projectId: "avicenna-6c69b",
-          storageBucket: "avicenna-6c69b.firebasestorage.app",
-          messagingSenderId: "637017009599",
-          appId: "1:637017009599:web:2099825be3085614c7c50a",
-          measurementId: "G-HYVRBJ7HX0"
-        };
+  <script>
+    // Your Firebase config here — replace with your actual Firebase project credentials
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
+    };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        // Helper function to get yesterday's date as YYYY-MM-DD string
-        function getYesterdayDateString() {
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            return yesterday.toISOString().slice(0, 10);
-        }
+    // Helper functions to get date strings YYYY-MM-DD
+    function getYesterdayDateString() {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      return yesterday.toISOString().slice(0, 10);
+    }
+    function getTodayDateString() {
+      return new Date().toISOString().slice(0, 10);
+    }
 
-        // Fetch yesterday's archive from Firestore and render it
-        async function fetchYesterdayArchive() {
-            const archiveGrid = document.getElementById('archive-grid');
-            archiveGrid.textContent = 'Loading archive...';
+    // Fetch yesterday's archive from Firestore and render it
+    async function fetchYesterdayArchive() {
+      const archiveGrid = document.getElementById('archive-grid');
+      archiveGrid.textContent = 'Loading archive...';
 
-            const yesterdayId = getYesterdayDateString();
+      const yesterdayId = getYesterdayDateString();
 
-            try {
-                const docRef = db.collection('archives').doc(yesterdayId);
-                const docSnap = await docRef.get();
+      try {
+        const docRef = db.collection('archives').doc(yesterdayId);
+        const docSnap = await docRef.get();
 
-                if (docSnap.exists) {
-                    const data = docSnap.data();
-                    archiveGrid.innerHTML = ''; // Clear loading message
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          archiveGrid.innerHTML = ''; // Clear loading message
 
-                    // data should be like { group1: ["word1", "word2"], group2: [...] ... }
-                    Object.values(data).forEach(wordList => {
-                        wordList.forEach(word => {
-                            const card = document.createElement('div');
-                            card.classList.add('archive-card');
-                            card.textContent = word;
-                            archiveGrid.appendChild(card);
-                        });
-                    });
-                } else {
-                    archiveGrid.textContent = 'No archive found for yesterday.';
-                }
-            } catch (error) {
-                console.error('Error fetching archive:', error);
-                archiveGrid.textContent = 'Failed to load archive.';
-            }
-        }
-
-        // Call archive fetch on page load
-        fetchYesterdayArchive();
-
-
-        // ----------------- Existing Puzzle Game Code -------------------
-
-        const words = [
-            { text: "Stand", group: "ECG Right Axis Shift" },
-            { text: "Inhale", group: "ECG Right Axis Shift" },
-            { text: "Skinny", group: "ECG Right Axis Shift" },
-            { text: "Lead 3 > Lead 1", group: "ECG Right Axis Shift" },
-            { text: "Koplik", group: "Measles" },
-            { text: "Warthin", group: "Measles" },
-            { text: "Finkeldey", group: "Measles" },
-            { text: "Encephalitis", group: "Measles" },
-            { text: "MYC", group: "Endemic Burkitt Lymphoma" },
-            { text: "Burkitt", group: "Endemic Burkitt Lymphoma" },
-            { text: "Mandible", group: "Endemic Burkitt Lymphoma" },
-            { text: "Ovaries", group: "Endemic Burkitt Lymphoma" },
-            { text: "Small Intestine", group: "Three" },
-            { text: "Poliovirus", group: "Three" },
-            { text: "Cyclin D", group: "Three" },
-            { text: "RAS", group: "Three" }
-        ];
-
-        let selectedWords = [];
-        let mistakes = 0;
-        const maxMistakes = 4;
-        let foundGroups = [];
-
-        const grid = document.getElementById('grid');
-        const submitBtn = document.getElementById('submit-btn');
-        const shuffleBtn = document.getElementById('shuffle-btn');
-        const message = document.getElementById('message');
-        const mistakesDisplay = document.getElementById('mistakes');
-        const groupClassMap = {
-            "ECG Right Axis Shift": "flowers",
-            "Measles": "fruits",
-            "Endemic Burkitt Lymphoma": "animals",
-            "Three": "colors"
-        };
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function renderGrid() {
-            grid.innerHTML = '';
-            const shuffledWords = shuffleArray([...words]);
-            shuffledWords.forEach(word => {
-                if (!foundGroups.includes(word.group)) {
-                    const card = document.createElement('div');
-                    card.classList.add('card');
-                    card.textContent = word.text;
-                    card.dataset.group = word.group;
-                    card.addEventListener('click', () => toggleSelection(card, word));
-                    grid.appendChild(card);
-                }
+          // data expected format: { group1: ["word1", ...], group2: [...], ... }
+          Object.values(data).forEach(wordList => {
+            wordList.forEach(word => {
+              const card = document.createElement('div');
+              card.classList.add('archive-card');
+              card.textContent = word;
+              archiveGrid.appendChild(card);
             });
+          });
+        } else {
+          archiveGrid.textContent = 'No archive found for yesterday.';
         }
+      } catch (error) {
+        console.error('Error fetching archive:', error);
+        archiveGrid.textContent = 'Failed to load archive.';
+      }
+    }
 
-        function toggleSelection(card, word) {
-            if (
-                card.classList.contains('correct-flowers') || 
-                card.classList.contains('correct-fruits') || 
-                card.classList.contains('correct-animals') || 
-                card.classList.contains('correct-colors')
-            ) return;
+    // Fetch today's puzzle from Firestore; returns array of {text, group} or null
+    async function fetchTodaysPuzzle() {
+      const todayId = getTodayDateString();
 
-            if (card.classList.contains('selected')) {
-                card.classList.remove('selected');
-                selectedWords = selectedWords.filter(w => w.text !== word.text);
-            } else if (selectedWords.length < 4) {
-                card.classList.add('selected');
-                selectedWords.push(word);
-            }
+      try {
+        const docRef = db.collection('archives').doc(todayId);
+        const docSnap = await docRef.get();
 
-            submitBtn.disabled = selectedWords.length !== 4;
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          const newWords = [];
+          for (const [group, wordList] of Object.entries(data)) {
+            wordList.forEach(word => newWords.push({ text: word, group }));
+          }
+          return newWords;
+        } else {
+          console.log('No puzzle found for today.');
+          return null;
         }
+      } catch (error) {
+        console.error('Error fetching today\'s puzzle:', error);
+        return null;
+      }
+    }
 
-        function checkGroup() {
-            if (selectedWords.length !== 4) return;
-            const group = selectedWords[0].group;
-            const isCorrect = selectedWords.every(word => word.group === group);
-            const cards = document.querySelectorAll('.card.selected');
-            if (isCorrect) {
-                const classSuffix = groupClassMap[group];
-                cards.forEach(card => card.classList.add(`correct-${classSuffix}`));
-                foundGroups.push(group);
-                message.textContent = `"${group}"`;
-                selectedWords = [];
-                submitBtn.disabled = true;
-                if (foundGroups.length === 4) {
-                    message.textContent = 'Avicenna!';
-                    submitBtn.style.display = 'none';
-                    shuffleBtn.style.display = 'none';
-                }
-            } else {
-                cards.forEach(card => {
-                    card.classList.add('incorrect');
-                    setTimeout(() => card.classList.remove('incorrect'), 500);
-                });
-                mistakes++;
-                mistakesDisplay.textContent = `Mistakes: ${mistakes}/${maxMistakes}`;
-                message.textContent = 'Incorrect group. Try again!';
-                if (mistakes >= maxMistakes) {
-                    message.textContent = 'Game Over! Too many mistakes.';
-                    submitBtn.style.display = 'none';
-                    shuffleBtn.style.display = 'none';
-                }
-                selectedWords = [];
-                submitBtn.disabled = true;
-            }
-            cards.forEach(card => card.classList.remove('selected'));
+    // Your static fallback puzzle (in case no puzzle found in Firestore today)
+    const fallbackWords = [
+      { text: "Stand", group: "ECG Right Axis Shift" },
+      { text: "Inhale", group: "ECG Right Axis Shift" },
+      { text: "Skinny", group: "ECG Right Axis Shift" },
+      { text: "Lead 3 > Lead 1", group: "ECG Right Axis Shift" },
+      { text: "Koplik", group: "Measles" },
+      { text: "Warthin", group: "Measles" },
+      { text: "Finkeldey", group: "Measles" },
+      { text: "Encephalitis", group: "Measles" },
+      { text: "MYC", group: "Endemic Burkitt Lymphoma" },
+      { text: "Burkitt", group: "Endemic Burkitt Lymphoma" },
+      { text: "Mandible", group: "Endemic Burkitt Lymphoma" },
+      { text: "Ovaries", group: "Endemic Burkitt Lymphoma" },
+      { text: "Small Intestine", group: "Three" },
+      { text: "Poliovirus", group: "Three" },
+      { text: "Cyclin D", group: "Three" },
+      { text: "RAS", group: "Three" }
+    ];
+
+    // Game variables
+    let words = [];  // will be set after fetch
+    let selectedWords = [];
+    let mistakes = 0;
+    const maxMistakes = 4;
+    let foundGroups = [];
+
+    const grid = document.getElementById('grid');
+    const submitBtn = document.getElementById('submit-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    const message = document.getElementById('message');
+    const mistakesDisplay = document.getElementById('mistakes');
+    const groupClassMap = {
+      "ECG Right Axis Shift": "flowers",
+      "Measles": "fruits",
+      "Endemic Burkitt Lymphoma": "animals",
+      "Three": "colors"
+    };
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function renderGrid() {
+      grid.innerHTML = '';
+      const shuffledWords = shuffleArray([...words]);
+      shuffledWords.forEach(word => {
+        if (!foundGroups.includes(word.group)) {
+          const card = document.createElement('div');
+          card.classList.add('card');
+          card.textContent = word.text;
+          card.dataset.group = word.group;
+          card.addEventListener('click', () => toggleSelection(card, word));
+          grid.appendChild(card);
         }
+      });
+      submitBtn.disabled = true;
+      message.textContent = '';
+    }
 
-        submitBtn.addEventListener('click', checkGroup);
-        shuffleBtn.addEventListener('click', renderGrid);
+    function toggleSelection(card, word) {
+      if (
+        card.classList.contains('correct-flowers') ||
+        card.classList.contains('correct-fruits') ||
+        card.classList.contains('correct-animals') ||
+        card.classList.contains('correct-colors')
+      ) return;
 
-        renderGrid();
+      if (card.classList.contains('selected')) {
+        card.classList.remove('selected');
+        selectedWords = selectedWords.filter(w => w.text !== word.text);
+      } else if (selectedWords.length < 4) {
+        card.classList.add('selected');
+        selectedWords.push(word);
+      }
 
-    </script>
+      submitBtn.disabled = selectedWords.length !== 4;
+    }
+
+    function checkGroup() {
+      if (selectedWords.length !== 4) return;
+      const group = selectedWords[0].group;
+      const isCorrect = selectedWords.every(word => word.group === group);
+      const cards = document.querySelectorAll('.card.selected');
+
+      if (isCorrect) {
+        const classSuffix = groupClassMap[group];
+        cards.forEach(card => card.classList.add(`correct-${classSuffix}`));
+        foundGroups.push(group);
+        message.textContent = `"${group}"`;
+        selectedWords = [];
+        submitBtn.disabled = true;
+
+        if (foundGroups.length === 4) {
+          message.textContent = 'Avicenna!';
+          submitBtn.style.display = 'none';
+          shuffleBtn.style.display = 'none';
+        }
+      } else {
+        cards.forEach(card => {
+          card.classList.add('incorrect');
+          setTimeout(() => card.classList.remove('incorrect'), 500);
+        });
+        mistakes++;
+        mistakesDisplay.textContent = `Mistakes: ${mistakes}/${maxMistakes}`;
+        message.textContent = 'Incorrect group. Try again!';
+        if (mistakes >= maxMistakes) {
+          message.textContent = 'Game Over! Too many mistakes.';
+          submitBtn.style.display = 'none';
+          shuffleBtn.style.display = 'none';
+        }
+        selectedWords = [];
+        submitBtn.disabled = true;
+      }
+      cards.forEach(card => card.classList.remove('selected'));
+    }
+
+    submitBtn.addEventListener('click', checkGroup);
+    shuffleBtn.addEventListener('click', renderGrid);
+
+    // Initialize the page:
+    async function initialize() {
+      await fetchYesterdayArchive();
+
+      const todayPuzzle = await fetchTodaysPuzzle();
+      if (todayPuzzle && todayPuzzle.length > 0) {
+        words = todayPuzzle;
+      } else {
+        words = fallbackWords;
+      }
+
+      foundGroups = [];
+      mistakes = 0;
+      mistakesDisplay.textContent = `Mistakes: 0/${maxMistakes}`;
+      submitBtn.style.display = 'inline-block';
+      shuffleBtn.style.display = 'inline-block';
+      submitBtn.disabled = true;
+      message.textContent = '';
+      renderGrid();
+    }
+
+    initialize();
+
+  </script>
 </body>
 </html>
