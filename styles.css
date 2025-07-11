@@ -26,28 +26,27 @@ body {
 }
 
 .tile.locked {
-  background-color: #555;
-  color: white;
   pointer-events: none;
+  cursor: default;
 }
 
 .group-easiest {
-  background-color: #ddd; /* light gray */
+  background-color: #ddd;
   color: black;
 }
 
 .group-medium {
-  background-color: #888; /* medium gray */
+  background-color: #888;
   color: white;
 }
 
 .group-hard {
-  background-color: #444; /* dark gray */
+  background-color: #444;
   color: white;
 }
 
 .group-hardest {
-  background-color: black; /* black */
+  background-color: black;
   color: white;
 }
 
