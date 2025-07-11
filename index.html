@@ -138,14 +138,14 @@
   <script>
     // Your Firebase config here — replace with your actual Firebase project credentials
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID",
-      measurementId: "YOUR_MEASUREMENT_ID"
-    };
+    apiKey: "AIzaSyDg3PnFvuXML5zBXIZIwescKEpRPq0Ab6g",
+    authDomain: "avicenna-6c69b.firebaseapp.com",
+    projectId: "avicenna-6c69b",
+    storageBucket: "avicenna-6c69b.firebasestorage.app",
+    messagingSenderId: "637017009599",
+    appId: "1:637017009599:web:2099825be3085614c7c50a",
+    measurementId: "G-HYVRBJ7HX0"
+  };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
@@ -211,7 +211,7 @@
       const todayId = getTodayDateString();
 
       try {
-        const docRef = db.collection('archives').doc(todayId);
+        const docRef = db.collection('archive').doc(todayId);
         const docSnap = await docRef.get();
 
         if (docSnap.exists) {
