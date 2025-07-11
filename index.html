@@ -133,7 +133,13 @@
         const shuffleBtn = document.getElementById('shuffle-btn');
         const message = document.getElementById('message');
         const mistakesDisplay = document.getElementById('mistakes');
-
+        const groupClassMap = {
+        "ECG Right Axis Shift": "flowers",
+        "Measles": "fruits",
+        "Endemic Burkitt Lymphoma": "animals",
+        "Three": "colors"
+        };
+        
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -178,7 +184,8 @@
             const isCorrect = selectedWords.every(word => word.group === group);
             const cards = document.querySelectorAll('.card.selected');
             if (isCorrect) {
-                cards.forEach(card => card.classList.add(`correct-${group.toLowerCase()}`));
+                const classSuffix = groupClassMap[group];
+                cards.forEach(card => card.classList.add(`correct-${classSuffix}`));
                 foundGroups.push(group);
                 message.textContent = `"${group}"`;
                 selectedWords = [];
