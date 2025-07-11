@@ -77,19 +77,17 @@ function submitGroup() {
   );
 
   if (matchIndex !== -1) {
-    // Lock correct tiles and add color class
-    const tiles = document.querySelectorAll(".tile");
-    tiles.forEach(tile => {
-      if (selected.includes(tile.textContent)) {
-        tile.classList.remove("selected");
-        tile.classList.add("locked");
-        // Add difficulty-based class
-        tile.classList.add(difficultyClasses[matchIndex]);
-      }
-    });
+  const tiles = document.querySelectorAll(".tile");
+  tiles.forEach(tile => {
+    if (selected.includes(tile.textContent)) {
+      tile.classList.remove("selected");
+      tile.classList.add("locked");
+      tile.classList.add(difficultyClasses[matchIndex]);  // add difficulty color here
+    }
+  });
 
-    feedback.textContent = "Correct!";
-    solvedGroups++;
+  feedback.textContent = "Correct!";
+  solvedGroups++;
   } else {
     feedback.textContent = "Try again.";
   }
