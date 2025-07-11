@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connections Game</title>
+    <title>Baba's Puzzle: </title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -95,7 +95,7 @@
     </style>
 </head>
 <body>
-    <h1>Connections Game</h1>
+    <h1>Baba's Puzzle</h1>
     <div id="game-container">
         <div id="grid"></div>
         <button id="submit-btn">Submit</button>
@@ -105,22 +105,22 @@
     </div>
     <script>
         const words = [
-            { text: "Rose", group: "Flowers" },
-            { text: "Tulip", group: "Flowers" },
-            { text: "Daisy", group: "Flowers" },
-            { text: "Lily", group: "Flowers" },
-            { text: "Blue", group: "Colors" },
-            { text: "Red", group: "Colors" },
-            { text: "Green", group: "Colors" },
-            { text: "Yellow", group: "Colors" },
-            { text: "Dog", group: "Animals" },
-            { text: "Cat", group: "Animals" },
-            { text: "Bird", group: "Animals" },
-            { text: "Fish", group: "Animals" },
-            { text: "Apple", group: "Fruits" },
-            { text: "Banana", group: "Fruits" },
-            { text: "Orange", group: "Fruits" },
-            { text: "Grape", group: "Fruits" }
+            { text: "Stand", group: "ECG Right Axis Shift" },
+            { text: "Inhale", group: "ECG Right Axis Shift" },
+            { text: "Tall", group: "ECG Right Axis Shift" },
+            { text: "Lead 3 > Lead 1", group: "ECG Right Axis Shift" },
+            { text: "Koplik", group: "Measles" },
+            { text: "Warthin", group: "Measles" },
+            { text: "Finkeldey", group: "Measles" },
+            { text: "Encephalitis", group: "Measles" },
+            { text: "MYC", group: "Endemic Burkitt Lymphoma" },
+            { text: "Burkitt", group: "Endemic Burkitt Lymphoma" },
+            { text: "Mandible", group: "Endemic Burkitt Lymphoma" },
+            { text: "Ovaries", group: "Endemic Burkitt Lymphoma" },
+            { text: "Small Intestine", group: "Three" },
+            { text: "Poliovirus", group: "Three" },
+            { text: "Cyclin D", group: "Three" },
+            { text: "RAS", group: "Three" }
         ];
 
         let selectedWords = [];
@@ -180,11 +180,11 @@
             if (isCorrect) {
                 cards.forEach(card => card.classList.add(`correct-${group.toLowerCase()}`));
                 foundGroups.push(group);
-                message.textContent = `Correct! You found the "${group}" group!`;
+                message.textContent = `"${group}"`;
                 selectedWords = [];
                 submitBtn.disabled = true;
                 if (foundGroups.length === 4) {
-                    message.textContent = 'Congratulations! You won the game!';
+                    message.textContent = 'Avicenna!';
                     submitBtn.style.display = 'none';
                     shuffleBtn.style.display = 'none';
                 }
