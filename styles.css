@@ -28,24 +28,26 @@ body {
 .tile.locked {
   pointer-events: none;
   cursor: default;
+  /* No background-color here so difficulty colors show */
 }
 
-.group-easiest {
+/* Difficulty colors apply only when tile is locked */
+.tile.locked.group-easiest {
   background-color: #ddd;
   color: black;
 }
 
-.group-medium {
+.tile.locked.group-medium {
   background-color: #888;
   color: white;
 }
 
-.group-hard {
+.tile.locked.group-hard {
   background-color: #444;
   color: white;
 }
 
-.group-hardest {
+.tile.locked.group-hardest {
   background-color: black;
   color: white;
 }
@@ -53,4 +55,3 @@ body {
 .controls {
   margin-top: 20px;
 }
-
