@@ -6,7 +6,12 @@ window.addEventListener('load', () => {
   title.textContent = `Baba's Puzzle of ${formattedDate}`;
 });
 
-const difficultyLevels = [0, 1, 2, 3];
+const difficultyClasses = [
+  "group-easiest",   // index 0: Antibiotics (easiest)
+  "group-medium",    // index 1: Autoimmune Diseases
+  "group-hard",      // index 2: Brain Structures
+  "group-hardest"    // index 3: Neurological Disorders (hardest)
+];
 
 const terms = [
   // Group: Antibiotics
