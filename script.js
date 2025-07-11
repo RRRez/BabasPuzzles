@@ -89,9 +89,11 @@ function formatDate(date) {
   return date.toLocaleDateString(undefined, options);
 }
 
-window.onload = () => {
+window.addEventListener('load', () => {
   const title = document.getElementById('page-title');
   const today = new Date();
-  title.textContent = `Baba's Puzzle of ${formatDate(today)}`;
-};
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = today.toLocaleDateString(undefined, options);
+  title.textContent = `Baba's Puzzle of ${formattedDate}`;
+});
 
