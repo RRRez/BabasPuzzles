@@ -180,7 +180,7 @@
       const yesterdayId = getYesterdayDateString();
 
       try {
-        const docRef = db.collection('archives').doc(yesterdayId);
+        const docRef = db.collection('archive').doc(yesterdayId);
         const docSnap = await docRef.get();
 
         if (docSnap.exists) {
