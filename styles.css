@@ -1,1 +1,37 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.tile {
+  padding: 15px;
+  background-color: #e0f0ff;
+  border: 2px solid #0077cc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tile.selected {
+  background-color: #ffc107;
+}
+
+.tile.locked {
+  background-color: #4caf50;
+  color: white;
+  pointer-events: none;
+}
+
+.controls {
+  margin-top: 20px;
+}
 
