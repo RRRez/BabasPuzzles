@@ -6,6 +6,8 @@ window.addEventListener('load', () => {
   title.textContent = `Baba's Puzzle of ${formattedDate}`;
 });
 
+const difficultyLevels = [0, 1, 2, 3];
+
 const terms = [
   // Group: Antibiotics
   "Penicillin", "Amoxicillin", "Erythromycin", "Doxycycline",
@@ -55,6 +57,13 @@ function selectTile(tile) {
   }
 }
 
+const difficultyClasses = [
+  "group-easiest",
+  "group-medium",
+  "group-hard",
+  "group-hardest"
+];
+
 function submitGroup() {
   if (selected.length !== 4) {
     feedback.textContent = "Please select exactly 4 terms.";
@@ -62,18 +71,20 @@ function submitGroup() {
   }
 
   // Check if selected terms match a group
-  const match = correctGroups.find(group =>
+  const matchIndex = correctGroups.findIndex(group =>
     selected.every(term => group.includes(term)) &&
     group.every(term => selected.includes(term))
   );
 
-  if (match) {
-    // Lock correct tiles
+  if (matchIndex !== -1) {
+    // Lock correct tiles and add color class
     const tiles = document.querySelectorAll(".tile");
     tiles.forEach(tile => {
       if (selected.includes(tile.textContent)) {
         tile.classList.remove("selected");
         tile.classList.add("locked");
+        // Add difficulty-based class
+        tile.classList.add(difficultyClasses[matchIndex]);
       }
     });
 
@@ -88,7 +99,6 @@ function submitGroup() {
   if (solvedGroups === 4) {
     feedback.textContent = "Avicenna!";
   }
-  
 }
 
 function formatDate(date) {
