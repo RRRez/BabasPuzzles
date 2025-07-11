@@ -33,14 +33,27 @@
             padding: 15px;
             text-align: center;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
         .card.selected {
             background-color: #d3e4ff;
             border-color: #007bff;
         }
-        .card.correct {
-            background-color: #d4edda;
+        .card.correct-flowers {
+            background-color: #e0e0e0; /* Lightest gray for easiest */
+            border-color: #28a745;
+        }
+        .card.correct-fruits {
+            background-color: #c0c0c0; /* Medium-light gray */
+            border-color: #28a745;
+        }
+        .card.correct-animals {
+            background-color: #a0a0a0; /* Medium-dark gray */
+            border-color: #28a745;
+        }
+        .card.correct-colors {
+            background-color: #000000; /* Black for hardest */
+            color: #ffffff; /* White text */
             border-color: #28a745;
         }
         .card.incorrect {
@@ -145,7 +158,10 @@
         }
 
         function toggleSelection(card, word) {
-            if (card.classList.contains('correct')) return;
+            if (card.classList.contains('correct-flowers') || 
+                card.classList.contains('correct-fruits') || 
+                card.classList.contains('correct-animals') || 
+                card.classList.contains('correct-colors')) return;
             if (card.classList.contains('selected')) {
                 card.classList.remove('selected');
                 selectedWords = selectedWords.filter(w => w.text !== word.text);
@@ -162,7 +178,7 @@
             const isCorrect = selectedWords.every(word => word.group === group);
             const cards = document.querySelectorAll('.card.selected');
             if (isCorrect) {
-                cards.forEach(card => card.classList.add('correct'));
+                cards.forEach(card => card.classList.add(`correct-${group.toLowerCase()}`));
                 foundGroups.push(group);
                 message.textContent = `Correct! You found the "${group}" group!`;
                 selectedWords = [];
