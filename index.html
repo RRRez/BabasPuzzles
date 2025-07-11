@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baba's Puzzle: </title>
+    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baba's Puzzle</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +15,7 @@
             margin: 0;
             padding: 20px;
         }
-        h1 {
+        h1, h2 {
             color: #333;
         }
         #game-container {
@@ -92,10 +93,41 @@
             font-size: 16px;
             color: #dc3545;
         }
+        #archive-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        #archive-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .archive-card {
+            background-color: #eeeeee;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 </head>
 <body>
     <h1>Baba's Puzzle</h1>
+
+    <!-- Archive container to show yesterday's puzzle -->
+    <div id="archive-container">
+        <h2>Yesterday's Puzzle Archive</h2>
+        <div id="archive-grid">Loading archive...</div>
+    </div>
+
     <div id="game-container">
         <div id="grid"></div>
         <button id="submit-btn">Submit</button>
@@ -103,7 +135,69 @@
         <div id="message"></div>
         <div id="mistakes">Mistakes: 0/4</div>
     </div>
+
     <script>
+        // Your Firebase config here — replace with your actual Firebase project credentials
+        const firebaseConfig = {
+          apiKey: "AIzaSyDg3PnFvuXML5zBXIZIwescKEpRPq0Ab6g",
+          authDomain: "avicenna-6c69b.firebaseapp.com",
+          projectId: "avicenna-6c69b",
+          storageBucket: "avicenna-6c69b.firebasestorage.app",
+          messagingSenderId: "637017009599",
+          appId: "1:637017009599:web:2099825be3085614c7c50a",
+          measurementId: "G-HYVRBJ7HX0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Helper function to get yesterday's date as YYYY-MM-DD string
+        function getYesterdayDateString() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            return yesterday.toISOString().slice(0, 10);
+        }
+
+        // Fetch yesterday's archive from Firestore and render it
+        async function fetchYesterdayArchive() {
+            const archiveGrid = document.getElementById('archive-grid');
+            archiveGrid.textContent = 'Loading archive...';
+
+            const yesterdayId = getYesterdayDateString();
+
+            try {
+                const docRef = db.collection('archives').doc(yesterdayId);
+                const docSnap = await docRef.get();
+
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+                    archiveGrid.innerHTML = ''; // Clear loading message
+
+                    // data should be like { group1: ["word1", "word2"], group2: [...] ... }
+                    Object.values(data).forEach(wordList => {
+                        wordList.forEach(word => {
+                            const card = document.createElement('div');
+                            card.classList.add('archive-card');
+                            card.textContent = word;
+                            archiveGrid.appendChild(card);
+                        });
+                    });
+                } else {
+                    archiveGrid.textContent = 'No archive found for yesterday.';
+                }
+            } catch (error) {
+                console.error('Error fetching archive:', error);
+                archiveGrid.textContent = 'Failed to load archive.';
+            }
+        }
+
+        // Call archive fetch on page load
+        fetchYesterdayArchive();
+
+
+        // ----------------- Existing Puzzle Game Code -------------------
+
         const words = [
             { text: "Stand", group: "ECG Right Axis Shift" },
             { text: "Inhale", group: "ECG Right Axis Shift" },
@@ -134,12 +228,12 @@
         const message = document.getElementById('message');
         const mistakesDisplay = document.getElementById('mistakes');
         const groupClassMap = {
-        "ECG Right Axis Shift": "flowers",
-        "Measles": "fruits",
-        "Endemic Burkitt Lymphoma": "animals",
-        "Three": "colors"
+            "ECG Right Axis Shift": "flowers",
+            "Measles": "fruits",
+            "Endemic Burkitt Lymphoma": "animals",
+            "Three": "colors"
         };
-        
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -164,10 +258,13 @@
         }
 
         function toggleSelection(card, word) {
-            if (card.classList.contains('correct-flowers') || 
+            if (
+                card.classList.contains('correct-flowers') || 
                 card.classList.contains('correct-fruits') || 
                 card.classList.contains('correct-animals') || 
-                card.classList.contains('correct-colors')) return;
+                card.classList.contains('correct-colors')
+            ) return;
+
             if (card.classList.contains('selected')) {
                 card.classList.remove('selected');
                 selectedWords = selectedWords.filter(w => w.text !== word.text);
@@ -175,6 +272,7 @@
                 card.classList.add('selected');
                 selectedWords.push(word);
             }
+
             submitBtn.disabled = selectedWords.length !== 4;
         }
 
@@ -218,6 +316,7 @@
         shuffleBtn.addEventListener('click', renderGrid);
 
         renderGrid();
+
     </script>
 </body>
 </html>
