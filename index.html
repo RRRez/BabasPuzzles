@@ -39,23 +39,7 @@
       background-color: #d3e4ff;
       border-color: #007bff;
     }
-    .card.correct-flowers {
-      background-color: #e0e0e0; /* Lightest gray for easiest */
-      border-color: #28a745;
-    }
-    .card.correct-fruits {
-      background-color: #c0c0c0; /* Medium-light gray */
-      border-color: #28a745;
-    }
-    .card.correct-animals {
-      background-color: #a0a0a0; /* Medium-dark gray */
-      border-color: #28a745;
-    }
-    .card.correct-colors {
-      background-color: #000000; /* Black for hardest */
-      color: #ffffff; /* White text */
-      border-color: #28a745;
-    }
+    
     .card.incorrect {
       background-color: #f8d7da;
       border-color: #dc3545;
@@ -172,7 +156,8 @@
     
       return `${mm}-${dd}-${yyyy}`;  // MM-DD-YYYY
     }
-
+    
+    
     // Fetch yesterday's archive from Firestore and render it
     async function fetchYesterdayArchive() {
       const archiveGrid = document.getElementById('archive-grid');
@@ -257,12 +242,15 @@
     const shuffleBtn = document.getElementById('shuffle-btn');
     const message = document.getElementById('message');
     const mistakesDisplay = document.getElementById('mistakes');
-    const groupClassMap = {
-      "ECG Right Axis Shift": "flowers",
-      "Measles": "fruits",
-      "Endemic Burkitt Lymphoma": "animals",
-      "Three": "colors"
-    };
+    
+    function getGroupClass(group) {
+      return `correct-${slugify(group)}`;
+    }
+    
+    function slugify(str) {
+      return str.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+    }
+
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -308,37 +296,49 @@
       submitBtn.disabled = selectedWords.length !== 4;
     }
 
+    const shadeMap = ['#e0e0e0', '#c0c0c0', '#a0a0a0', '#000000'];
+    const textColorMap = ['#000000', '#000000', '#ffffff', '#ffffff'];
+    
+    function applyCorrectStyle(card, groupIndex) {
+      card.style.backgroundColor = shadeMap[groupIndex];
+      card.style.color = textColorMap[groupIndex];
+      card.style.borderColor = '#28a745';
+    }
+    
     function checkGroup() {
       if (selectedWords.length !== 4) return;
+    
       const group = selectedWords[0].group;
       const isCorrect = selectedWords.every(word => word.group === group);
       const cards = document.querySelectorAll('.card.selected');
-
+    
       if (isCorrect) {
-        const classSuffix = groupClassMap[group];
-        cards.forEach(card => card.classList.add(`correct-${classSuffix}`));
-      
-        // Mark words as solved so they don’t reappear on shuffle
+        // Apply dynamic styles
+        const groupIndex = foundGroups.length;  // 0 for easiest, 3 for hardest
+        cards.forEach(card => applyCorrectStyle(card, groupIndex));
+    
+        // Mark solved
         selectedWords.forEach(word => {
           word.solved = true;
         });
-      
+    
         foundGroups.push(group);
         message.textContent = `"${group}"`;
         selectedWords = [];
         submitBtn.disabled = true;
-      
+    
         if (foundGroups.length === 4) {
           message.textContent = 'Avicenna!';
           submitBtn.style.display = 'none';
           shuffleBtn.style.display = 'none';
         }
-      }
- else {
+      } else {
+        // Incorrect group
         cards.forEach(card => {
           card.classList.add('incorrect');
           setTimeout(() => card.classList.remove('incorrect'), 500);
         });
+    
         mistakes++;
         mistakesDisplay.textContent = `Mistakes: ${mistakes}/${maxMistakes}`;
         message.textContent = 'Incorrect group. Try again!';
@@ -350,6 +350,8 @@
         selectedWords = [];
         submitBtn.disabled = true;
       }
+    
+      // Always clear selection visuals
       cards.forEach(card => card.classList.remove('selected'));
     }
 
