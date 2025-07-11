@@ -80,5 +80,18 @@ function submitGroup() {
   if (solvedGroups === 4) {
     feedback.textContent = "Avicenna!";
   }
+  
 }
+
+function formatDate(date) {
+  // Format as: Month Day, Year (e.g., July 11, 2025)
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return date.toLocaleDateString(undefined, options);
+}
+
+window.onload = () => {
+  const title = document.getElementById('page-title');
+  const today = new Date();
+  title.textContent = `Baba's Puzzle of ${formatDate(today)}`;
+};
 
