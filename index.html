@@ -276,7 +276,7 @@
       grid.innerHTML = '';
       const shuffledWords = shuffleArray([...words]);
       shuffledWords.forEach(word => {
-        if (!foundGroups.includes(word.group)) {
+        if (!word.solved) {
           const card = document.createElement('div');
           card.classList.add('card');
           card.textContent = word.text;
@@ -317,17 +317,24 @@
       if (isCorrect) {
         const classSuffix = groupClassMap[group];
         cards.forEach(card => card.classList.add(`correct-${classSuffix}`));
+      
+        // Mark words as solved so they don’t reappear on shuffle
+        selectedWords.forEach(word => {
+          word.solved = true;
+        });
+      
         foundGroups.push(group);
         message.textContent = `"${group}"`;
         selectedWords = [];
         submitBtn.disabled = true;
-
+      
         if (foundGroups.length === 4) {
           message.textContent = 'Avicenna!';
           submitBtn.style.display = 'none';
           shuffleBtn.style.display = 'none';
         }
-      } else {
+      }
+ else {
         cards.forEach(card => {
           card.classList.add('incorrect');
           setTimeout(() => card.classList.remove('incorrect'), 500);
