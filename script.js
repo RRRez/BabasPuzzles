@@ -62,13 +62,6 @@ function selectTile(tile) {
   }
 }
 
-const difficultyClasses = [
-  "group-easiest",
-  "group-medium",
-  "group-hard",
-  "group-hardest"
-];
-
 function submitGroup() {
   if (selected.length !== 4) {
     feedback.textContent = "Please select exactly 4 terms.";
