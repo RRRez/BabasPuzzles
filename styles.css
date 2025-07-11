@@ -31,6 +31,26 @@ body {
   pointer-events: none;
 }
 
+.group-easiest {
+  background-color: #ddd; /* light gray */
+  color: black;
+}
+
+.group-medium {
+  background-color: #888; /* medium gray */
+  color: white;
+}
+
+.group-hard {
+  background-color: #444; /* dark gray */
+  color: white;
+}
+
+.group-hardest {
+  background-color: black; /* black */
+  color: white;
+}
+
 .controls {
   margin-top: 20px;
 }
