@@ -1,23 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connections Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        #game-container {
+            text-align: center;
+        }
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(4, 120px);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .card.selected {
+            background-color: #d3e4ff;
+            border-color: #007bff;
+        }
+        .card.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        .card.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        #submit-btn, #shuffle-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #submit-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        #submit-btn:hover {
+            background-color: #0056b3;
+        }
+        #shuffle-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        #shuffle-btn:hover {
+            background-color: #545b62;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        #mistakes {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #dc3545;
+        }
+    </style>
 </head>
 <body>
-  <h1 id="page-title">Baba's Puzzle of </h1>
-  <p>Select 4 related medical terms that form a group.</p>
+    <h1>Connections Game</h1>
+    <div id="game-container">
+        <div id="grid"></div>
+        <button id="submit-btn">Submit</button>
+        <button id="shuffle-btn">Shuffle</button>
+        <div id="message"></div>
+        <div id="mistakes">Mistakes: 0/4</div>
+    </div>
+    <script>
+        const words = [
+            { text: "Rose", group: "Flowers" },
+            { text: "Tulip", group: "Flowers" },
+            { text: "Daisy", group: "Flowers" },
+            { text: "Lily", group: "Flowers" },
+            { text: "Blue", group: "Colors" },
+            { text: "Red", group: "Colors" },
+            { text: "Green", group: "Colors" },
+            { text: "Yellow", group: "Colors" },
+            { text: "Dog", group: "Animals" },
+            { text: "Cat", group: "Animals" },
+            { text: "Bird", group: "Animals" },
+            { text: "Fish", group: "Animals" },
+            { text: "Apple", group: "Fruits" },
+            { text: "Banana", group: "Fruits" },
+            { text: "Orange", group: "Fruits" },
+            { text: "Grape", group: "Fruits" }
+        ];
 
-  <div id="grid" class="grid"></div>
+        let selectedWords = [];
+        let mistakes = 0;
+        const maxMistakes = 4;
+        let foundGroups = [];
 
-  <div class="controls">
-    <button onclick="submitGroup()">Submit Group</button>
-    <p id="feedback"></p>
-  </div>
+        const grid = document.getElementById('grid');
+        const submitBtn = document.getElementById('submit-btn');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const message = document.getElementById('message');
+        const mistakesDisplay = document.getElementById('mistakes');
 
-  <script src="script.js"></script>
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderGrid() {
+            grid.innerHTML = '';
+            const shuffledWords = shuffleArray([...words]);
+            shuffledWords.forEach(word => {
+                if (!foundGroups.includes(word.group)) {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.textContent = word.text;
+                    card.dataset.group = word.group;
+                    card.addEventListener('click', () => toggleSelection(card, word));
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function toggleSelection(card, word) {
+            if (card.classList.contains('correct')) return;
+            if (card.classList.contains('selected')) {
+                card.classList.remove('selected');
+                selectedWords = selectedWords.filter(w => w.text !== word.text);
+            } else if (selectedWords.length < 4) {
+                card.classList.add('selected');
+                selectedWords.push(word);
+            }
+            submitBtn.disabled = selectedWords.length !== 4;
+        }
+
+        function checkGroup() {
+            if (selectedWords.length !== 4) return;
+            const group = selectedWords[0].group;
+            const isCorrect = selectedWords.every(word => word.group === group);
+            const cards = document.querySelectorAll('.card.selected');
+            if (isCorrect) {
+                cards.forEach(card => card.classList.add('correct'));
+                foundGroups.push(group);
+                message.textContent = `Correct! You found the "${group}" group!`;
+                selectedWords = [];
+                submitBtn.disabled = true;
+                if (foundGroups.length === 4) {
+                    message.textContent = 'Congratulations! You won the game!';
+                    submitBtn.style.display = 'none';
+                    shuffleBtn.style.display = 'none';
+                }
+            } else {
+                cards.forEach(card => {
+                    card.classList.add('incorrect');
+                    setTimeout(() => card.classList.remove('incorrect'), 500);
+                });
+                mistakes++;
+                mistakesDisplay.textContent = `Mistakes: ${mistakes}/${maxMistakes}`;
+                message.textContent = 'Incorrect group. Try again!';
+                if (mistakes >= maxMistakes) {
+                    message.textContent = 'Game Over! Too many mistakes.';
+                    submitBtn.style.display = 'none';
+                    shuffleBtn.style.display = 'none';
+                }
+                selectedWords = [];
+                submitBtn.disabled = true;
+            }
+            cards.forEach(card => card.classList.remove('selected'));
+        }
+
+        submitBtn.addEventListener('click', checkGroup);
+        shuffleBtn.addEventListener('click', renderGrid);
+
+        renderGrid();
+    </script>
 </body>
 </html>
-
