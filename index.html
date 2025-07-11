@@ -308,16 +308,23 @@
     function checkGroup() {
       if (selectedWords.length !== 4) return;
     
+      // Sort selected word texts to create a consistent identifier
+      const selectionKey = selectedWords.map(w => w.text).sort().join('|');
+    
+      // Prevent repeated incorrect attempts
+      if (triedCombinations.has(selectionKey)) {
+        message.textContent = 'You already tried that combination!';
+        return;
+      }
+    
       const group = selectedWords[0].group;
       const isCorrect = selectedWords.every(word => word.group === group);
       const cards = document.querySelectorAll('.card.selected');
     
       if (isCorrect) {
-        // Apply dynamic styles
-        const groupIndex = foundGroups.length;  // 0 for easiest, 3 for hardest
+        const groupIndex = foundGroups.length;
         cards.forEach(card => applyCorrectStyle(card, groupIndex));
     
-        // Mark solved
         selectedWords.forEach(word => {
           word.solved = true;
         });
@@ -333,7 +340,9 @@
           shuffleBtn.style.display = 'none';
         }
       } else {
-        // Incorrect group
+        // Save failed attempt
+        triedCombinations.add(selectionKey);
+    
         cards.forEach(card => {
           card.classList.add('incorrect');
           setTimeout(() => card.classList.remove('incorrect'), 500);
@@ -351,7 +360,6 @@
         submitBtn.disabled = true;
       }
     
-      // Always clear selection visuals
       cards.forEach(card => card.classList.remove('selected'));
     }
 
@@ -361,16 +369,28 @@
     // Initialize the page:
     async function initialize() {
       await fetchYesterdayArchive();
-
+    
       const todayPuzzle = await fetchTodaysPuzzle();
       if (todayPuzzle && todayPuzzle.length > 0) {
         words = todayPuzzle;
       } else {
         words = fallbackWords;
       }
+    
+      foundGroups = [];
+      mistakes = 0;
+      triedCombinations = new Set();  // Reset tried guesses
+      mistakesDisplay.textContent = `Mistakes: 0/${maxMistakes}`;
+      submitBtn.style.display = 'inline-block';
+      shuffleBtn.style.display = 'inline-block';
+      submitBtn.disabled = true;
+      message.textContent = '';
+      renderGrid();
+    }
 
       foundGroups = [];
       mistakes = 0;
+      let triedCombinations = new Set();
       mistakesDisplay.textContent = `Mistakes: 0/${maxMistakes}`;
       submitBtn.style.display = 'inline-block';
       shuffleBtn.style.display = 'inline-block';
